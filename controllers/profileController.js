@@ -11,7 +11,6 @@ exports.saveProfile = async (req, res) => {
   try {
 
     const {
-
       bio,
       education,
       college,
@@ -22,26 +21,21 @@ exports.saveProfile = async (req, res) => {
       linkedin,
       github,
       portfolio
-
     } = req.body;
 
     let profile_pic = null;
 
     if (req.file) {
-
       profile_pic = req.file.filename;
-
     }
 
     const existing = await pool.query(
-      "SELECT * FROM profiles WHERE user_id=$1",
+      "SELECT * FROM profiles WHERE user_id = $1",
       [user_id]
     );
 
-    // UPDATE
+    // UPDATE PROFILE
     if (existing.rows.length > 0) {
-
-      const oldPic = existing.rows[0].profile_pic;
 
       const result = await pool.query(
         `
@@ -54,7 +48,7 @@ exports.saveProfile = async (req, res) => {
           degree = $5,
           graduation_year = $6,
           experience = $7,
-          current_role = $8,
+          "current_role" = $8,
           linkedin = $9,
           github = $10,
           portfolio = $11
@@ -78,10 +72,9 @@ exports.saveProfile = async (req, res) => {
       );
 
       return res.json(result.rows[0]);
-
     }
 
-    // INSERT
+    // INSERT PROFILE
     const result = await pool.query(
       `
       INSERT INTO profiles
@@ -94,7 +87,7 @@ exports.saveProfile = async (req, res) => {
         degree,
         graduation_year,
         experience,
-        current_role,
+        "current_role",
         linkedin,
         github,
         portfolio
@@ -123,9 +116,7 @@ exports.saveProfile = async (req, res) => {
 
     res.json(result.rows[0]);
 
-  }
-
-  catch (err) {
+  } catch (err) {
 
     console.error(err);
 
@@ -136,7 +127,6 @@ exports.saveProfile = async (req, res) => {
   }
 
 };
-
 
 
 // ========================
@@ -164,9 +154,7 @@ exports.getProfile = async (req, res) => {
 
     res.json(result.rows[0] || {});
 
-  }
-
-  catch (err) {
+  } catch (err) {
 
     console.error(err);
 
@@ -177,7 +165,6 @@ exports.getProfile = async (req, res) => {
   }
 
 };
-
 
 
 // ========================
@@ -205,11 +192,9 @@ exports.getUserProfile = async (req, res) => {
       [id]
     );
 
-    res.json(result.rows[0]);
+    res.json(result.rows[0] || {});
 
-  }
-
-  catch (err) {
+  } catch (err) {
 
     console.error(err);
 
