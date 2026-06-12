@@ -5,6 +5,7 @@ require("dotenv").config();
 const app = express();
 
 const userRoutes = require("./routes/userRoutes");
+const path = require("path");
 
 // Middleware
 app.use(
@@ -40,7 +41,10 @@ app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/users", userRoutes);
 
 // Serve uploaded profile images
-app.use("/uploads", express.static("uploads"));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // Test Route
 app.get("/", (req, res) => {
