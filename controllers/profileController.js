@@ -25,10 +25,11 @@ exports.saveProfile = async (req, res) => {
 
     let profile_pic = null;
 
-    if (req.file) {
-      profile_pic = req.file.filename;
-    }
+if (req.file) {
 
+  profile_pic = req.file.path;
+
+}
     const existing = await pool.query(
       "SELECT * FROM profiles WHERE user_id = $1",
       [user_id]
